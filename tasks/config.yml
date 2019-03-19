@@ -1,0 +1,36 @@
+---
+- name: Generate config file
+  template:
+    src: "config.j2"
+    dest: "{{dehydrated_etcdir}}/config"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+
+- name: Generate domains file
+  template:
+    src: "domains.txt.j2"
+    dest: "{{dehydrated_domainstxt}}"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+
+# https://github.com/lukas2511/dehydrated/blob/master/docs/per-certificate-config.md
+- name: Generate per certificate configs
+  template:
+    dest: "{{dehydrated_domainsdir}}/{{item.domain.split(' ')[0]}}"
+    src: certconfig.j2
+    owner: root
+    group: root
+    mode: 0600
+  loop: "{{ dehydrated_domains }}"
+  when: item.state|default('present') == "present"
+  notify: run dehydrated
+
+- name: Remove per certificate configs
+  file:
+    path: "{{dehydrated_domainsdir}}/{{item.domain.split(' ')[0]}}"
+    state: absent
+  loop: "{{ dehydrated_domains }}"
+  when: item.state|default('present') == "absent"
+  notify: run dehydrated

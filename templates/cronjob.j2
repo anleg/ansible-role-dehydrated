@@ -1,0 +1,5 @@
+#!/bin/sh
+# {{ ansible_managed }}
+
+{{ dehydrated_basedir }}/dehydrated --cron -t dns-01 -k '{{ dehydrated_hooksdir }}/cfhookbash/hook.sh'> {{ dehydrated_updatelog }} 2>&1
+

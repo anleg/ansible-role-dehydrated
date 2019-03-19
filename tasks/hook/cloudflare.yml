@@ -1,0 +1,23 @@
+---
+
+- name: Create cf hook dir
+  file:
+    state: directory
+    path: "{{ dehydrated_hooksdir }}/cloudflare"
+    mode: "0700"
+
+- name: install cloudflare hook
+  template:
+    src: "hooks/cloudflare/hook.sh.j2"
+    dest: "{{ dehydrated_hooksdir }}/cloudflare/hook.sh"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: configure cloudflare hook
+  template:
+    src: "hooks/cloudflare/config.sh.j2"
+    dest: "{{ dehydrated_hooksdir }}/cloudflare/config.sh"
+    owner: "root"
+    group: "root"
+    mode: "600"

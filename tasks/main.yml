@@ -1,0 +1,47 @@
+---
+
+- name: Install dehydrated dependencies
+  apt: name={{ dehydrated_dependencies }}
+
+- name: Create dehydrated directories
+  file:
+    state: directory
+    path: "{{item.path}}"
+    mode: "{{item.mode|default('0700')}}"
+  with_items:
+    - { path: "{{dehydrated_etcdir}}" }
+    - { path: "{{dehydrated_install_root}}", mode: "0755" }
+    - { path: "{{dehydrated_configdir}}" }
+    - { path: "{{dehydrated_certsdir}}" }
+    - { path: "{{dehydrated_certsdir}}/current" }
+    - { path: "{{dehydrated_domainsir}}" }
+    - { path: "{{dehydrated_accountsdir}}" }
+    - { path: "{{dehydrated_wellknown}}", mode: "0755" }
+    - { path: "{{dehydrated_hooksdir}}", mode: "0755" }
+
+- name: Checkout dehydrated from github
+  git:
+    repo: "https://github.com/lukas2511/dehydrated.git"
+    update: "{{ dehydrated_update }}"
+    dest: "{{ dehydrated_install_root }}"
+    version: "{{ dehydrated_version }}"
+
+- include_tasks: "config.yml"
+- include_tasks: "hook/cloudflare.yml"
+
+- name: Create account key and accept terms
+  command: "{{dehydrated_basedir}}/dehydrated --register --accept-terms"
+  args:
+    creates: "{{dehydrated_accountsdir}}/*/account_key.pem"
+
+- name: Install cronjob
+  cron:
+    name: dehydrated-renew
+    minute: "{{ 59|random(seed=inventory_hostname) }}"
+    hour: "{{ 4|random(seed=inventory_hostname) }}"
+    special_time: weekly
+    user: root
+    job: "{{ dehydrated_install_root }}/dehydrated -c"
+    cron_file: dehydrated
+    state: present
+

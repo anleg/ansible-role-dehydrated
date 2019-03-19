@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+# {{ ansible_managed }}
+# https://github.com/lukas2511/dehydrated/blob/master/docs/examples/hook.sh
+
+prefix="_acme-challenge."
+cf_api="https://api.cloudflare.com/client/v4"
+rootDirectory="{{ dehydrated_hooksdir }}/cloudflare"
+configFile="${rootDirectory}/config.sh"
+
+
+deploy_challenge() {
+    local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
+
+    . "${configFile}"
+
+    curl -s -X POST "${cf_api}/zones/${zone}/dns_records"\
+        -H "X-Auth-Email: ${email}"\
+        -H "X-Auth-Key: ${api_key}"\
+        -H "Content-Type: application/json"\
+        --data '{"type":"TXT","name":"'${prefix}${DOMAIN}'","content":"'${TOKEN_VALUE}'","ttl":120,"priority":10,"proxied":false}'\
+        -o "${rootDirectory}/${DOMAIN}.txt"
+
+    # Wait DNS propagation
+    sleep 10
+}
+
+clean_challenge() {
+    local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
+
+    . "${configFile}"
+
+    id=$(cat "${rootDirectory}/${DOMAIN}.txt" | jq .result.id | tr -d '"')
+
+    curl -X DELETE "${cf_zone}/zones/${zone}/dns_records/${id}" \
+     -H "X-Auth-Email: ${email}"\
+     -H "X-Auth-Key: ${api_key}"\
+     -H "Content-Type: application/json"
+
+     rm "${rootDirectory}/${DOMAIN}.txt"
+}
+
+deploy_cert() {
+    local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
+
+}
+
+deploy_ocsp() {
+    local DOMAIN="${1}" OCSPFILE="${2}" TIMESTAMP="${3}"
+
+}
+
+unchanged_cert() {
+    local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}"
+
+}
+
+invalid_challenge() {
+    local DOMAIN="${1}" RESPONSE="${2}"
+
+}
+
+request_failure() {
+    local STATUSCODE="${1}" REASON="${2}" REQTYPE="${3}" HEADERS="${4}"
+
+}
+
+generate_csr() {
+    local DOMAIN="${1}" CERTDIR="${2}" ALTNAMES="${3}"
+
+}
+
+startup_hook() {
+  # This hook is called before the cron command to do some initial tasks
+  # (e.g. starting a webserver).
+
+  :
+}
+
+exit_hook() {
+  # This hook is called at the end of the cron command and can be used to
+  # do some final (cleanup or other) tasks.
+
+  :
+}
+
+HANDLER="$1"; shift
+if [[ "${HANDLER}" =~ ^(deploy_challenge|clean_challenge|deploy_cert|deploy_ocsp|unchanged_cert|invalid_challenge|request_failure|generate_csr|startup_hook|exit_hook)$ ]]; then
+  "$HANDLER" "$@"
+fi

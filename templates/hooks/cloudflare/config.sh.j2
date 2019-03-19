@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+
+case ${1} in
+
+{% for domain in dehydrated_domains %}
+    {% if domain.challengetype is defined and domain.hook is defined %}
+    {% if domain.challengetype == "dns-01" and domain.hook = "cloudflare" %}
+    	"{{ domain.domain.split(' ')[0] }}")
+
+    		zone="{{ domain.zone }}"
+    		email="{{ domain.email }}"
+    		api_key="{{ domain.api_key }}"
+
+    	;;
+    {% endif %}
+    {% endif %}
+{% endfor %}
+
+esac

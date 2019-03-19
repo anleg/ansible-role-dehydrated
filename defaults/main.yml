@@ -1,0 +1,43 @@
+---
+
+dehydrated_dependencies:
+  - git
+  - openssl
+  - curl
+  - jq
+
+dehydrated_install_root:    "/opt/dehydrated"
+dehydrated_etcdir:          "/etc/dehydrated"
+dehydrated_configdir:       "{{dehydrated_etcdir}}/conf.d"
+dehydrated_domainstxt:      "{{dehydrated_etcdir}}/domains.txt"
+dehydrated_domainsdir:      "{{dehydrated_etcdir}}/domains.d"
+dehydrated_hooksdir:        "{{dehydrated_etcdir}}/hooks"
+dehydrated_certsdir:        "{{dehydrated_etcdir}}/certs"
+dehydrated_accountsdir:     "{{dehydrated_etcdir}}/accounts"
+dehydrated_wellknown:       "{{dehydrated_etcdir}}/acme-challenges"
+
+dehydrated_challengetype:   "http-01"
+dehydrated_ca_url:          "https://acme-v02.api.letsencrypt.org/directory"
+dehydrated_ca_terms:        "https://acme-v02.api.letsencrypt.org/terms"
+dehydrated_keysize:         "4096"
+dehydrated_renewdays:       "60"
+dehydrated_privkeyrenew:    "no"
+dehydrated_privkeyrollover: "no"
+dehydrated_keyalgo:         "rsa"
+dehydrated_contactmail:     ""
+dehydrated_lockfile:        "{{dehydrated_install_root}}/lock"
+dehydrated_ocspstaple:      "no"
+dehydrated_run_once:        false
+dehydrated_updatelog:       "/var/log/dehydrated.log"
+
+dehydrated_run_on_changes:  yes
+
+# List of certs to request, and anternative names on the same line
+dehydrated_domains: []
+#dehydrated_domains:
+#  - domain: exemple.net *.exemple.net
+#    challenge: "dns-01"
+#    hook: "cloudflare"
+#    zone: "16813216814561"
+#    email: "name@exemple.net"
+#    api_key: ""
