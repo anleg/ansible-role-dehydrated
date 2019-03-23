@@ -1,7 +1,6 @@
-#jinja2: trim_blocks: True, lstrip_blocks: True
-{% if item.challengetype is defined %}
-CHALLENGETYPE={{ item.challengetype }}
-{% if item.challengetype == "dns-01" %}
+{% if item.challenge is defined %}
+CHALLENGETYPE={{ item.challenge }}
+{% if item.challenge == "dns-01" %}
 {% if item.hook == "cloudflare" %}
 HOOK={{ dehydrated_hooksdir }}/{{ item.hook }}/hook.sh
 {% endif %}
