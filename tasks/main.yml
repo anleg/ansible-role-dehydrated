@@ -14,7 +14,7 @@
     - { path: "{{dehydrated_configdir}}" }
     - { path: "{{dehydrated_certsdir}}" }
     - { path: "{{dehydrated_certsdir}}/current" }
-    - { path: "{{dehydrated_domainsir}}" }
+    - { path: "{{dehydrated_domainsdir}}" }
     - { path: "{{dehydrated_accountsdir}}" }
     - { path: "{{dehydrated_wellknown}}", mode: "0755" }
     - { path: "{{dehydrated_hooksdir}}", mode: "0755" }
