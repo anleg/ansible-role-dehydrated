@@ -7,14 +7,17 @@ dehydrated_dependencies:
   - jq
 
 dehydrated_install_root:    "/opt/dehydrated"
-dehydrated_etcdir:          "/etc/dehydrated"
-dehydrated_configdir:       "{{dehydrated_etcdir}}/conf.d"
-dehydrated_domainstxt:      "{{dehydrated_etcdir}}/domains.txt"
-dehydrated_domainsdir:      "{{dehydrated_etcdir}}/domains.d"
-dehydrated_hooksdir:        "{{dehydrated_etcdir}}/hooks"
-dehydrated_certsdir:        "{{dehydrated_etcdir}}/certs"
-dehydrated_accountsdir:     "{{dehydrated_etcdir}}/accounts"
-dehydrated_wellknown:       "{{dehydrated_etcdir}}/acme-challenges"
+dehydrated_basedir:         "/etc/dehydrated"
+dehydrated_configdir:       "{{dehydrated_basedir}}/conf.d"
+dehydrated_domainstxt:      "{{dehydrated_basedir}}/domains.txt"
+dehydrated_domainsdir:      "{{dehydrated_basedir}}/domains.d"
+dehydrated_hooksdir:        "{{dehydrated_basedir}}/hooks"
+dehydrated_certsdir:        "{{dehydrated_basedir}}/certs"
+dehydrated_accountsdir:     "{{dehydrated_basedir}}/accounts"
+dehydrated_wellknown:       "{{dehydrated_basedir}}/acme-challenges"
+
+dehydrated_update: "yes"
+dehydrated_version: "HEAD"
 
 dehydrated_challengetype:   "http-01"
 dehydrated_ca_url:          "https://acme-v02.api.letsencrypt.org/directory"
