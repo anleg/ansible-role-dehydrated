@@ -1,5 +1,4 @@
 ---
-
 - name: Create cf hook dir
   file:
     state: directory

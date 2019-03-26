@@ -1,5 +1,5 @@
 # {{ ansible_managed }}
 
-{% for domain in dehydrated_domains %}
-{{ domain }}
+{% for item in dehydrated_domains %}
+{{ item.domain }}
 {% endfor %}
