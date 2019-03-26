@@ -1,8 +1,8 @@
 {% if item.challenge is defined %}
-CHALLENGETYPE={{ item.challenge }}
+CHALLENGETYPE="{{ item.challenge }}"
 {% if item.challenge == "dns-01" %}
 {% if item.hook == "cloudflare" %}
-HOOK={{ dehydrated_hooksdir }}/{{ item.hook }}/hook.sh
+HOOK="{{ dehydrated_hooksdir }}/{{ item.hook }}/hook.sh"
 {% endif %}
 {% endif %}
 {% endif %}

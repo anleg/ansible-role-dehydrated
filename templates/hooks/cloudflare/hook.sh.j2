@@ -14,11 +14,11 @@ deploy_challenge() {
 
     . "${configFile}"
 
-    curl -s -X POST "${cf_api}/zones/${zone}/dns_records"\
-        -H "X-Auth-Email: ${email}"\
-        -H "X-Auth-Key: ${api_key}"\
-        -H "Content-Type: application/json"\
-        --data '{"type":"TXT","name":"'${prefix}${DOMAIN}'","content":"'${TOKEN_VALUE}'","ttl":120,"priority":10,"proxied":false}'\
+    curl -s -X POST "${cf_api}/zones/${zone}/dns_records" \
+        -H "X-Auth-Email: ${email}" \
+        -H "X-Auth-Key: ${api_key}" \
+        -H "Content-Type: application/json" \
+        --data '{"type":"TXT","name":"'${prefix}${DOMAIN}'","content":"'${TOKEN_VALUE}'","ttl":120,"priority":10,"proxied":false}' \
         -o "${rootDirectory}/${DOMAIN}.txt"
 
     # Wait DNS propagation
@@ -33,9 +33,9 @@ clean_challenge() {
     id=$(cat "${rootDirectory}/${DOMAIN}.txt" | jq .result.id | tr -d '"')
 
     curl -X DELETE "${cf_zone}/zones/${zone}/dns_records/${id}" \
-     -H "X-Auth-Email: ${email}"\
-     -H "X-Auth-Key: ${api_key}"\
-     -H "Content-Type: application/json"
+         -H "X-Auth-Email: ${email}" \
+         -H "X-Auth-Key: ${api_key}" \
+         -H "Content-Type: application/json"
 
      rm "${rootDirectory}/${DOMAIN}.txt"
 }
